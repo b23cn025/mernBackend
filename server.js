@@ -38,6 +38,7 @@ app.use('/api/admin',     require('./routes/admin'));
 app.use('/api/users/settings', settingsRoutes);
 app.use('/api/users/profile',  profileRoutes);
 app.use('/api/helpdesk',       helpdeskRoutes);
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // Health check
 app.get('/api/health', (req, res) => {

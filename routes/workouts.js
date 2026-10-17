@@ -17,7 +17,7 @@ router.get('/', authMiddleware, async (req, res) => {
     if (difficulty) query.difficulty = difficulty;
 
     // Free users only see non-premium workouts
-    if (req.user.subscription.plan === 'free') {
+    if (!req.user.subscription || req.user.subscription.plan === 'free') {
       query.isPremium = false;
     }
 
