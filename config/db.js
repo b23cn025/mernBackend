@@ -1,0 +1,30 @@
+const mongoose = require('mongoose');
+const dns = require('dns');
+
+let isConnected = false;
+
+const connectDB = async () => {
+  if (!process.env.MONGO_URI || process.env.MONGO_URI.includes('your_username')) {
+    console.error('⚠️  MONGO_URI not set in .env — please update backend/.env with your MongoDB connection string');
+    return;
+  }
+  try {
+    const dnsServers = (process.env.MONGO_DNS_SERVERS || '')
+      .split(',')
+      .map((server) => server.trim())
+      .filter(Boolean);
+
+    if (dnsServers.length > 0) {
+      dns.setServers(dnsServers);
+    }
+
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = true;
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    console.error('⚠️  Server will keep running but API calls needing DB will fail gracefully.');
+  }
+};
+
+module.exports = connectDB;
